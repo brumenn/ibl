@@ -1,0 +1,82 @@
+/* Copyright (c) 2022 Nicolas Castelli. All Rights Reserved. */
+
+#pragma once
+
+#define PI 3.14159265359
+#define TWO_PI 6.28318530718
+
+struct TextureCubeSpiralBlur
+{
+    static float3 Sample(TextureCube Tex, SamplerState TexSampler, float3 UVs, float Distance, float DistanceSteps, float RadialSteps, float RadialOffset, float KernelPower)
+    {
+
+        //We convert the UVs (CameraVector often) into Spherical Coordinates. We can save some calculations with normalized CameraVector as radius can be excluded and will be 1.
+        //The conversion from normalized cartesian vector to spherical is found here: https://en.wikipedia.org/wiki/Spherical_coordinate_system#Coordinate_system_conversions
+
+        float theta = atan2(UVs.y, UVs.x);
+        float phi = acos(UVs.z);
+
+        float2 UV = float2(theta, phi);
+        float2 NewUV = UV;
+        float3 CameraVector = 0; //We will use this to store the resultant CameraVector for each sample.
+
+        int i = 0;
+        float StepSize = Distance / (int)DistanceSteps;
+        float CurDistance = 0;
+        float2 CurOffset = (0, 0);
+        float SubOffset = 0;
+        float accumdist = 0;
+        float3 Color = (0, 0, 0);
+
+        if (DistanceSteps < 1)
+        {
+            return ProcessMaterialColorTextureLookup(TextureCubeSample(Tex, TexSampler, UVs));
+        }
+        else
+        {
+            if (Distance == 0)
+            {
+                return ProcessMaterialColorTextureLookup(TextureCubeSample(Tex, TexSampler, UVs));
+            }
+            else
+            {
+                while (i < (int)DistanceSteps)
+                {
+                    CurDistance += StepSize;
+                    for (int j = 0; j < (int)RadialSteps; j++)
+                    {
+                        SubOffset += 1;
+                        CurOffset.x = cos(TWO_PI * (SubOffset / RadialSteps));
+                        CurOffset.y = sin(TWO_PI * (SubOffset / RadialSteps));
+
+                        NewUV.x = UV.x + CurOffset.x * CurDistance;
+                        NewUV.y = UV.y + CurOffset.y * CurDistance;
+
+                        float distpow = pow(CurDistance, KernelPower);
+
+                        //We convert it back before sampling.
+                        //Like before since we know the radius is always 1, no need to include it.
+                        //NewUV.x stores the offsetted theta, and NewUV.y stores the offsetted phi.
+
+                        CameraVector = float3(cos(NewUV.x) * sin(NewUV.y), sin(NewUV.x) * sin(NewUV.y), cos(NewUV.y) );
+
+                        Color += ProcessMaterialColorTextureLookup(TextureCubeSample(Tex, TexSampler, CameraVector)) * distpow;
+                        accumdist += distpow;
+                    }
+                    SubOffset += RadialOffset;
+                    i++;
+                }
+                Color = Color;
+                Color /= accumdist;
+                return Color;
+            }
+        }
+
+    }
+
+};
+
+/*
+#include "/IBL/TextureCubeSpiralBlur.usf"
+return TextureCubeSpiralBlur::Sample(Texture, TextureSampler, UVs, Distance, DistanceSteps, RadialSteps, RadialOffset, KernelPower);
+*/

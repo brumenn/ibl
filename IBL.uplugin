@@ -1,0 +1,27 @@
+{
+    "FriendlyName": "IBL",
+    "Category": "Rendering",
+    "Description": "Ready-to-use image-based lighting actor with built-in presets.",
+    "CreatedBy": "Nicolas Castelli",
+    "CreatedByURL": "https://github.com/brumenn",
+    "MarketplaceURL": "",
+    "DocsURL": "https://github.com/brumenn/ibl",
+    "SupportURL": "https://github.com/brumenn/ibl/issues",
+    "FileVersion": 3,
+    "Version": 1,
+    "VersionName": "1.0",
+    "EngineVersion": "5.5.0",
+    "CanContainContent": true,
+    "IsBetaVersion": false,
+    "IsExperimentalVersion": false,
+    "EnabledByDefault": true,
+    "Installed": false,
+	"Modules": [
+		{
+			"Name": "IBL",
+			"Type": "Runtime",
+			"LoadingPhase": "PostEngineInit",
+			"WhitelistPlatforms": [ "Win64", "Mac", "Linux" ]
+		},
+	]
+}
