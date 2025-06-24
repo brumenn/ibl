@@ -11,6 +11,3 @@ IBL is a plugin for Unreal Engine inspired from the built-in HDRI Backdrop plugi
 Built with cinematics in mind, IBL try to fill HDRI Backdrop's weakness and get something easier to use as in traditional 3D softwares.
 
 Mainly designed to be used in editor, for PBR surrounding lighting and background, product visualization workflow, and turntables in sequencer. Can definitely be used as packshot setup as well.
-
-
-Source code is available, feel free to try and if you like it, see the [marketplace product page](https://www.unrealengine.com/marketplace/en-US/product/ibl) as a donation to support me financially and get all the ease of use that comes with it.
