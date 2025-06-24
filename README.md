@@ -1,4 +1,6 @@
 # IBL
+![Unreal Engine](https://img.shields.io/badge/Unreal_Engine-5.5-9455CE?logo=unrealengine)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 Ready-to-use image-based lighting actor with built-in presets for Unreal Engine.
 
